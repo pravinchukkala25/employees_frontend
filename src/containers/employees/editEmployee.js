@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { withRouter, useParams } from 'react-router-dom';
+import { withRouter, useParams, useHistory } from 'react-router-dom';
 import { Container, Button, Form, Row, Col, Card } from 'react-bootstrap';
 
 import { connect } from "react-redux";
@@ -19,6 +19,7 @@ import {
 function EditEmployee(props) {
 
 	let { employeeId } = useParams();
+	let history = useHistory();
 
 	const { viewEmployeeLoading, viewEmployeeSuccess, updateEmployeeSuccess, employee } = props;
 
@@ -31,14 +32,18 @@ function EditEmployee(props) {
 		} else {
 			props.addEmployee(values);
 		}
+
+		history.push('/');
 	}
 
 	useEffect(() => { 
-    if (employeeId && !viewEmployeeLoading && !viewEmployeeSuccess) {
+		console.log(history);
+    if(employeeId && !viewEmployeeLoading && !viewEmployeeSuccess) {
       props.viewEmployee(employeeId);
     }
 
   },[viewEmployeeLoading, viewEmployeeSuccess]);
+
 
 	// Formik Validations Setup
 
@@ -47,9 +52,9 @@ function EditEmployee(props) {
     initialValues: { ...employee },
     validationSchema: Yup.object({
       name: Yup.string().max(50, 'Must be 50 characters or less').required('Employee name is required.'),
-      email: Yup.string().email('Invalid email address').required('Email-id is required.'),
+      email: Yup.string().email('Invalid email address').required('Email-id is required.').typeError('Value is in incorrect format.'),
       date_of_joining: Yup.date().nullable(),
-      current_ctc: Yup.number().required('Current CTC is required.'),
+      current_ctc: Yup.number().required('Current CTC is required.').typeError('Value is in incorrect format.'),
       date_of_relieving: Yup.date().nullable(),
     }),
     onSubmit: values => {

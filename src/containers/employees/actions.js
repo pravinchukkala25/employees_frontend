@@ -15,6 +15,7 @@ import {
 	DELETE_EMPLOYEE,
 	DELETE_EMPLOYEE_SUCCESS,
 	DELETE_EMPLOYEE_FAILURE,
+	RESET_LOADING_STATE,
 } from './constants';
 
 
@@ -143,6 +144,12 @@ export function deleteEmployeeFailure(payload) {
 	return {
 		type: DELETE_EMPLOYEE_FAILURE,
 		payload,
+	};
+}
+
+export function resetLoadingState() {
+	return {
+		type: RESET_LOADING_STATE,
 	};
 }
 

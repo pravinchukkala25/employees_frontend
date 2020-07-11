@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
 import { Container, Table, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { connect } from "react-redux";
 import { compose } from 'redux';
 
 import {
   getEmployees as getEmployeesAction,
   deleteEmployee as deleteEmployeeAction,
+  resetLoadingState as resetLoadingStateAction,
 } from './actions';
 
 function Employees(props) {
 
   const { getEmployeesLoading, getEmployeesSuccess, employees } = props;
+
+  const history = useHistory();
 
   const deleteHandler = (event, id) => {
     if (id) {
@@ -23,12 +26,27 @@ function Employees(props) {
   }
 
   useEffect(() => { 
-
     if (!getEmployeesLoading && !getEmployeesSuccess) {
       props.getEmployees();
     }
 
   },[getEmployeesLoading, getEmployeesSuccess]);
+
+  const addEmployeePage = event => {
+    event.preventDefault(true);
+    event.stopPropagation(true);
+    props.resetLoadingState();
+
+    history.push('/employee');
+
+  };
+
+  const updateEmployeePage = (event, id) => {
+    event.preventDefault(true);
+    event.stopPropagation(true);
+    props.resetLoadingState();
+    history.push(`/employee/${id}`);
+  };
 
 	return (
 		<Container>
@@ -36,7 +54,7 @@ function Employees(props) {
             <h1 className="text-center">Employees List</h1>
           </div>
           <div className="mb-3">
-            <Link className="btn btn-info" to={`employee/`}>Add New</Link>
+            <Button variant="info" onClick={(event) => addEmployeePage(event)}>Add New</Button>
           </div>
 
           <Table striped bordered hover>
@@ -57,7 +75,7 @@ function Employees(props) {
                   <td>{employee.email}</td>
                   <td>{employee.date_of_joining}</td>
                   <td>
-                    <Link className="btn btn-info" to={`employee/${employee.id}`}>Edit</Link>{` `}
+                    <Button variant="info" onClick={(event) => updateEmployeePage(event, employee.id)}>Edit</Button>{` `}
                     <Button variant="danger" onClick={(event) => deleteHandler(event, employee.id)}>Delete</Button>
                   </td>
                 </tr>
@@ -68,7 +86,6 @@ function Employees(props) {
 
         </Container>
 		);
-
 }
 
 
@@ -84,6 +101,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getEmployees: () => dispatch(getEmployeesAction()),
     deleteEmployee: id => dispatch(deleteEmployeeAction(id)),
+    resetLoadingState: () => dispatch(resetLoadingStateAction()),
   };
 };
 

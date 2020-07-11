@@ -1,6 +1,3 @@
-
-import produce from 'immer';
-
 import {
 	GET_EMPLOYEES,
 	GET_EMPLOYEES_SUCCESS,
@@ -14,10 +11,12 @@ import {
 	UPDATE_EMPLOYEE_FAILURE,
 	DELETE_EMPLOYEE_SUCCESS,
 	DELETE_EMPLOYEE_FAILURE,
+	RESET_LOADING_STATE,
 } from './constants';
 
 const initialState = {
 	employee: {
+		id: '',
 		name: '',
    	email: '',
    	date_of_joining: '',
@@ -109,6 +108,20 @@ const employeesReducer = (state = initialState, action) => {
 			case DELETE_EMPLOYEE_FAILURE:
 				draft.deleteEmployeeFailure = true;
 				draft.deleteEmployeeSuccess = false;
+				break;
+
+			case RESET_LOADING_STATE:
+				draft.employee = {
+													id: '',
+													name: '',
+											   	email: '',
+											   	date_of_joining: '',
+											   	current_ctc: '',
+											   	date_of_relieving: '',
+												};
+			  draft.viewEmployeeLoading = false;
+				draft.viewEmployeeFailure = false;
+				draft.viewEmployeeSuccess = false;
 				break;
 
 		}
