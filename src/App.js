@@ -12,7 +12,10 @@ function App() {
           <Route exact path='/'>
             <Employees />
           </Route>
-          <Route path='/employees/:employeeId'>
+          <Route exact path='/employee/'>
+            <EditEmployee />
+          </Route>
+          <Route path='/employee/:employeeId'>
             <EditEmployee />
           </Route>
         </Switch>
